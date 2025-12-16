@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Создание портфолио</title>
+    <link rel="stylesheet" href="{% static 'main/css/profile_page.css' %}">
+</head>
+<body>
+<header class="header">
+    <div class="header-content">
+        <h1 class="logo">Мое портфолио</h1>
+        <nav class="nav">
+            <a href="{% url 'home' %}" class="nav-link">Главная</a>
+            <a href="{% url 'students:portfolio_list' %}" class="nav-link">Все портфолио</a>
+            <a href="#" class="nav-link">Контакты</a>
+        </nav>
+    </div>
+</header>
+
+<div class="portfolio-container">
+    <form id="portfolioForm" method="post" action="{% url 'students:create_portfolio' %}">
+        {% csrf_token %}
+
+        <!-- Основная информация -->
+        <div class="portfolio-section">
+            <h2 class="section-title">Основная информация</h2>
+
+            <div class="form-group">
+                <label for="id_last_name">Фамилия</label>
+                <input type="text" id="id_last_name" name="last_name" class="form-input"
+                       placeholder="Введите вашу фамилию"
+                       value="{{ form.last_name.value|default:'' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_first_name">Имя</label>
+                <input type="text" id="id_first_name" name="first_name" class="form-input"
+                       placeholder="Введите ваше имя"
+                       value="{{ form.first_name.value|default:'' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                <input type="email" id="id_email" name="email" class="form-input"
+                       placeholder="your.email@example.com"
+                       value="{{ form.email.value|default:'' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="id_phone">Телефон</label>
+                <input type="tel" id="id_phone" name="phone" class="form-input"
+                       placeholder="+7 (XXX) XXX-XX-XX"
+                       value="{{ form.phone.value|default:'' }}">
+            </div>
+        </div>
+
+        <!-- Образование -->
+        <div class="portfolio-section">
+            <h2 class="section-title">Образование</h2>
+            <div class="form-group">
+                <label for="id_school">Школа/Университет</label>
+                <input type="text" id="id_school" name="school" class="form-input"
+                       placeholder="Название учебного заведения"
+                       value="{{ form.school.value|default:'' }}">
+            </div>
+
+            <div class="form-group">
+                <label for="id_education_level">Уровень образования</label>
+                <select id="id_education_level" name="education_level" class="form-input">
+                    <option value="">Выберите уровень</option>
+                    <option value="school" {% if form.education_level.value == 'school' %}selected{% endif %}>Среднее образование</option>
+                    <option value="college" {% if form.education_level.value == 'college' %}selected{% endif %}>Среднее специальное</option>
+                    <option value="bachelor" {% if form.education_level.value == 'bachelor' %}selected{% endif %}>Бакалавриат</option>
+                    <option value="master" {% if form.education_level.value == 'master' %}selected{% endif %}>Магистратура</option>
+                    <option value="phd" {% if form.education_level.value == 'phd' %}selected{% endif %}>Аспирантура</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="id_specialization">Специализация</label>
+                <input type="text" id="id_specialization" name="specialization" class="form-input"
+                       placeholder="Ваша специальность или направление"
+                       value="{{ form.specialization.value|default:'' }}">
+            </div>
+        </div>
+
+        <!-- Опыт работы -->
+        <div class="portfolio-section">
+            <h2 class="section-title">Опыт работы</h2>
+            <textarea id="id_experience" name="experience" class="form-textarea"
+                      placeholder="Опишите ваш опыт..." rows="4">{{ form.experience.value|default:'' }}</textarea>
+        </div>
+
+        <!-- Увлечения -->
+        <div class="portfolio-section">
+            <h2 class="section-title">Увлечения</h2>
+            <textarea id="id_hobbies" name="hobbies" class="form-textarea"
+                      placeholder="Опишите ваши увлечения..." rows="4">{{ form.hobbies.value|default:'' }}</textarea>
+        </div>
+
+        <!-- Навыки -->
+        <div class="portfolio-section">
+            <h2 class="section-title">Навыки</h2>
+            <div class="skills-container">
+                <div class="skill-item">
+                    <input type="text" class="skill-input" placeholder="Добавьте навык">
+                    <button type="button" class="add-skill-btn">+</button>
+                </div>
+                <div class="skills-list"></div>
+                <input type="hidden" name="skills" id="skillsData" value="{{ form.skills.value|default:'[]' }}">
+            </div>
+        </div>
+
+        <!-- Достижения -->
+        <div class="portfolio-section">
+            <h2 class="section-title">Достижения</h2>
+            <textarea id="id_achievements" name="achievements" class="form-textarea"
+                      placeholder="Расскажите о ваших достижениях..." rows="5">{{ form.achievements.value|default:'' }}</textarea>
+        </div>
+
+        <!-- Цели -->
+        <div class="portfolio-section">
+            <h2 class="section-title">Карьерные цели</h2>
+            <textarea id="id_goals" name="goals" class="form-textarea"
+                      placeholder="Ваши карьерные цели..." rows="4">{{ form.goals.value|default:'' }}</textarea>
+        </div>
+
+        <!-- Кнопка -->
+        <div class="portfolio-section" style="text-align:center;">
+            <button type="submit" class="btn create-btn save-portfolio">Сохранить портфолио</button>
+            <div style="margin-top:1rem;">
+                <a href="{% url 'students:portfolio_list' %}" style="color:#ccc;text-decoration:none;">
+                    Посмотреть все портфолио
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const addSkillBtn = document.querySelector('.add-skill-btn');
+    const skillInput = document.querySelector('.skill-input');
+    const skillsList = document.querySelector('.skills-list');
+    const skillsData = document.getElementById('skillsData');
+    let skillsArray = [];
+
+    function updateSkillsField() {
+        skillsData.value = JSON.stringify(skillsArray);
+    }
+
+    function addSkill(skill) {
+        const tag = document.createElement('div');
+        tag.className = 'skill-tag';
+        tag.innerHTML = `${skill} <button type="button" class="remove-skill">&times;</button>`;
+        tag.querySelector('.remove-skill').addEventListener('click', () => {
+            skillsArray = skillsArray.filter(s => s !== skill);
+            updateSkillsField();
+            tag.remove();
+        });
+        skillsList.appendChild(tag);
+    }
+
+    addSkillBtn.addEventListener('click', () => {
+        const skill = skillInput.value.trim();
+        if (skill && !skillsArray.includes(skill)) {
+            skillsArray.push(skill);
+            addSkill(skill);
+            updateSkillsField();
+            skillInput.value = '';
+        }
+    });
+
+    document.getElementById('portfolioForm').addEventListener('submit', function(e) {
+        const first = document.getElementById('id_first_name').value.trim();
+        const last = document.getElementById('id_last_name').value.trim();
+        if (!first || !last) {
+            e.preventDefault();
+            alert('Введите фамилию и имя');
+        }
+        updateSkillsField();
+    });
+});
+</script>
+</body>
+</html>

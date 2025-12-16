@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все портфолио</title>
+    <link rel="stylesheet" href="{% static 'main/css/profile_page.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">Портфолио студентов</h1>
+            <nav class="nav">
+                <a href="{% url 'home' %}" class="nav-link">Главная</a>
+                <a href="{% url 'students:create_portfolio' %}" class="nav-link">Создать портфолио</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="portfolio-container">
+        <h1 style="text-align: center; margin-bottom: 2rem;">Все портфолио</h1>
+        
+        {% for portfolio in portfolios %}
+        <div class="portfolio-section">
+            <h2 class="section-title">{{ portfolio.first_name }} {{ portfolio.last_name }}</h2>
+            
+            <div class="form-group">
+                <strong>Образование:</strong>
+                <p>{{ portfolio.school }} ({{ portfolio.get_education_level_display }})</p>
+            </div>
+
+            {% if portfolio.hobbies %}
+            <div class="form-group">
+                <strong>Увлечения:</strong>
+                <p>{{ portfolio.hobbies }}</p>
+            </div>
+            {% endif %}
+
+            {% if portfolio.skills_list %}
+            <div class="form-group">
+                <strong>Навыки:</strong>
+                <div class="skills-list">
+                    {% for skill in portfolio.skills_list %}
+                        <div class="skill-tag">{{ skill }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if portfolio.achievements %}
+            <div class="form-group">
+                <strong>Достижения:</strong>
+                <p>{{ portfolio.achievements }}</p>
+            </div>
+            {% endif %}
+
+            <div class="form-group">
+                <small>Создано: {{ portfolio.created_at|date:"d.m.Y H:i" }}</small>
+            </div>
+        </div>
+        {% empty %}
+        <div class="portfolio-section">
+            <p style="text-align: center;">Портфолио пока нет. <a href="{% url 'students:create_portfolio' %}">Создайте первое!</a></p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

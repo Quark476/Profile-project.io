@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфолио</title>
+    <link rel="stylesheet" href="{% static 'main/css/home_page.css.' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">Портфолио студентов</h1>
+            <nav class="nav">
+                <a href="#" class="nav-link">Главная</a>
+                <a href="#" class="nav-link">О нас</a>
+                <a href="#" class="nav-link">Контакты</a>
+            </nav>
+        </div>
+    </header>
+    
+    <div class="container">
+        <form action="{% url 'services' %}">
+            <button class="btn create-btn">Создать портфолио</button>
+        </form>
+        <form action="{% url 'students:portfolio_list' %}">
+        <button class="btn profiles-btn">Посмотреть профили</button>
+        </form>
+    </div>
+</body>
+</html>
